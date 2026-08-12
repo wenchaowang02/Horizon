@@ -71,21 +71,11 @@
     }
   },
   "digest": {
-    "max_items": 15
+    "max_items": 15,
+    "language": "zh"
   },
   "email": {
-    "enabled": true,
-    "smtp_server": "smtp.163.com",
-    "smtp_port": 465,
-    "imap_server": "imap.163.com",
-    "use_tls": false,
-    "use_ssl": true,
-    "email_address": "13820386280@163.com",
-    "sender": "13820386280@163.com",
-    "password_env": "SMTP_PASSWORD",
-    "recipients": [
-      "13820386280@163.com"
-    ]
+    "enabled": false
   },
   "webhook": {
     "enabled": false
