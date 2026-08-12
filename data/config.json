@@ -47,11 +47,17 @@
     ],
     "reddit": {
       "subreddits": [
-        "LocalLLaMA",
-        "MachineLearning"
-      ],
-      "min_score": 30,
-      "profile": "ai-tech-focused"
+        {
+          "name": "LocalLLaMA",
+          "min_score": 30,
+          "profile": "ai-tech-focused"
+        },
+        {
+          "name": "MachineLearning",
+          "min_score": 50,
+          "profile": "ai-tech-focused"
+        }
+      ]
     }
   },
   "processing": {
