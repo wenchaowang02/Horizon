@@ -30,7 +30,7 @@ jobs:
         env:
           DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
         run: |
-          uv run horizon --hours 24 --language zh --log-level INFO
+          uv run horizon --hours 24 --log-level INFO
 
       - name: Push Summary to DingTalk Webhook
         env:
@@ -59,7 +59,6 @@ jobs:
           # 优先匹配带有 zh 标记或最新的摘要 Markdown 文件
           files = sorted(glob.glob("data/summaries/horizon-*.md"))
           if files:
-              # 如果存在 zh 结尾的文件，优先选用
               zh_files = [f for f in files if "zh" in f]
               target_file = zh_files[-1] if zh_files else files[-1]
               
