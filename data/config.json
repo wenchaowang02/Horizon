@@ -45,18 +45,14 @@
         "profile": "ai-tech-focused"
       }
     ],
-    "reddit": [
-      {
-        "subreddit": "LocalLLaMA",
-        "min_score": 30,
-        "profile": "ai-tech-focused"
-      },
-      {
-        "subreddit": "MachineLearning",
-        "min_score": 50,
-        "profile": "ai-tech-focused"
-      }
-    ]
+    "reddit": {
+      "subreddits": [
+        "LocalLLaMA",
+        "MachineLearning"
+      ],
+      "min_score": 30,
+      "profile": "ai-tech-focused"
+    }
   },
   "processing": {
     "profiles_dir": "profiles",
@@ -69,15 +65,16 @@
     }
   },
   "digest": {
-    "max_items": 15,
-    "language": "zh"
+    "max_items": 15
   },
   "email": {
     "enabled": true,
     "smtp_server": "smtp.163.com",
     "smtp_port": 465,
+    "imap_server": "imap.163.com",
     "use_tls": false,
     "use_ssl": true,
+    "email_address": "13820386280@163.com",
     "sender": "13820386280@163.com",
     "password_env": "SMTP_PASSWORD",
     "recipients": [
