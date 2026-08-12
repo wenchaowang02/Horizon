@@ -10,39 +10,39 @@
       {
         "name": "Hugging Face Blog",
         "url": "https://huggingface.co/blog/feed.xml",
-        "profile": "ai-tech-focused"
+        "profile": "tech-news"
       },
       {
         "name": "OpenAI Blog",
         "url": "https://openai.com/news/rss.xml",
-        "profile": "ai-tech-focused"
+        "profile": "tech-news"
       },
       {
         "name": "LangChain Blog",
         "url": "https://blog.langchain.dev/rss/",
-        "profile": "ai-tech-focused"
+        "profile": "tech-news"
       },
       {
         "name": "LlamaIndex Blog",
         "url": "https://www.llamaindex.ai/blog/rss.xml",
-        "profile": "ai-tech-focused"
+        "profile": "tech-news"
       },
       {
         "name": "NVIDIA Technical Blog",
         "url": "https://developer.nvidia.com/blog/feed/",
-        "profile": "ai-tech-focused"
+        "profile": "tech-news"
       },
       {
         "name": "Simon Willison Weblog",
         "url": "https://simonwillison.net/atom/everything/",
-        "profile": "ai-tech-focused"
+        "profile": "tech-news"
       }
     ],
     "hacker_news": [
       {
         "name": "Hacker News Top AI",
         "min_score": 50,
-        "profile": "ai-tech-focused"
+        "profile": "tech-news"
       }
     ],
     "reddit": {
@@ -50,22 +50,22 @@
         {
           "subreddit": "LocalLLaMA",
           "min_score": 30,
-          "profile": "ai-tech-focused"
+          "profile": "tech-news"
         },
         {
           "subreddit": "MachineLearning",
           "min_score": 50,
-          "profile": "ai-tech-focused"
+          "profile": "tech-news"
         }
       ]
     }
   },
   "processing": {
     "profiles_dir": "profiles",
-    "default_profile": "ai-tech-focused",
+    "default_profile": "tech-news",
     "profile_settings": {
-      "ai-tech-focused": {
-        "threshold": 6.5,
+      "tech-news": {
+        "threshold": 6.0,
         "topic_dedup": true
       }
     }
