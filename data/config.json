@@ -74,14 +74,14 @@
   },
   "email": {
     "enabled": true,
-    "smtp_server": "smtp.126.com",
+    "smtp_server": "smtp.163.com",
     "smtp_port": 465,
     "use_tls": false,
     "use_ssl": true,
-    "sender": "chaozicauc@126.com",
+    "sender": "13820386280@163.com",
     "password_env": "SMTP_PASSWORD",
     "recipients": [
-      "chaozicauc@126.com"
+      "13820386280@163.com"
     ]
   },
   "webhook": {
