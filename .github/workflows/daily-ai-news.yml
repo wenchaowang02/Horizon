@@ -2,8 +2,7 @@ name: Daily AI News Radar
 
 on:
   schedule:
-    # 北京时间每天早上 8:30 自动运行 (对应 UTC 时间 0:30)
-    - cron: '30 0 * * *'
+    - cron: '30 0 * * *' # 北京时间每天 8:30
   workflow_dispatch:
 
 jobs:
@@ -26,11 +25,48 @@ jobs:
       - name: Install Dependencies
         run: uv sync
 
-      - name: Run Horizon Radar & Push Notifications
+      - name: Run Horizon Radar & Email Push
         env:
           DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
-          DINGTALK_WEBHOOK: ${{ secrets.DINGTALK_WEBHOOK }}
-          DINGTALK_SECRET: ${{ secrets.DINGTALK_SECRET }}
           SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
         run: |
-          uv run horizon --hours 24 --language zh --log-level INFO
+          uv run horizon --hours 24 --log-level INFO
+
+      - name: Push Summary to DingTalk Webhook
+        env:
+          DINGTALK_WEBHOOK: ${{ secrets.DINGTALK_WEBHOOK }}
+          DINGTALK_SECRET: ${{ secrets.DINGTALK_SECRET }}
+        run: |
+          python -c '
+          import os, time, hmac, hashlib, base64, urllib.parse, requests, glob
+
+          secret = os.environ.get("DINGTALK_SECRET")
+          webhook = os.environ.get("DINGTALK_WEBHOOK")
+          
+          timestamp = str(round(time.time() * 1000))
+          secret_enc = secret.encode("utf-8")
+          string_to_sign = f"{timestamp}\n{secret}"
+          string_to_sign_enc = string_to_sign.encode("utf-8")
+          hmac_code = hmac.new(secret_enc, string_to_sign_enc, digestmod=hashlib.sha256).digest()
+          sign = urllib.parse.quote_plus(base64.b64encode(hmac_code))
+          
+          target_url = f"{webhook}&timestamp={timestamp}&sign={sign}"
+          
+          # 寻找生成的最新摘要文件
+          files = sorted(glob.glob("data/summaries/horizon-*.md"))
+          if files:
+              with open(files[-1], "r", encoding="utf-8") as f:
+                  content = f.read()
+              
+              payload = {
+                  "msgtype": "markdown",
+                  "markdown": {
+                      "title": "🌅 今日 AI 新闻雷达",
+                      "text": content[:4000] # 钉钉文本截断安全长度
+                  }
+              }
+              res = requests.post(target_url, json=payload)
+              print("DingTalk Response:", res.text)
+          else:
+              print("No summary markdown file found.")
+          '
