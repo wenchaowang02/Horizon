@@ -71,8 +71,7 @@
     }
   },
   "digest": {
-    "max_items": 15,
-    "languages": ["zh"]
+    "max_items": 15
   },
   "email": {
     "enabled": true,
@@ -90,8 +89,7 @@
   },
   "webhook": {
     "enabled": true,
-    "type": "feishu_dingtalk",
-    "method": "POST",
+    "provider": "dingtalk",
     "url_env": "DINGTALK_WEBHOOK",
     "secret_env": "DINGTALK_SECRET"
   }
