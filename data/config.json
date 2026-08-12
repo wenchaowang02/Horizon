@@ -48,12 +48,12 @@
     "reddit": {
       "subreddits": [
         {
-          "name": "LocalLLaMA",
+          "subreddit": "LocalLLaMA",
           "min_score": 30,
           "profile": "ai-tech-focused"
         },
         {
-          "name": "MachineLearning",
+          "subreddit": "MachineLearning",
           "min_score": 50,
           "profile": "ai-tech-focused"
         }
