@@ -89,7 +89,6 @@
   },
   "webhook": {
     "enabled": true,
-    "provider": "dingtalk",
     "url_env": "DINGTALK_WEBHOOK",
     "secret_env": "DINGTALK_SECRET"
   }
