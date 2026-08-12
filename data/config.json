@@ -1,72 +1,93 @@
-name: Daily AI News Radar
-
-on:
-  schedule:
-    - cron: '30 0 * * *' # 北京时间每天 8:30
-  workflow_dispatch:
-
-jobs:
-  run-horizon:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-
-      - name: Install uv
-        uses: astral-sh/setup-uv@v3
-        with:
-          enable-cache: true
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-
-      - name: Install Dependencies
-        run: uv sync
-
-      - name: Run Horizon Radar & Email Push
-        env:
-          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
-          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
-        run: |
-          uv run horizon --hours 24 --log-level INFO
-
-      - name: Push Summary to DingTalk Webhook
-        env:
-          DINGTALK_WEBHOOK: ${{ secrets.DINGTALK_WEBHOOK }}
-          DINGTALK_SECRET: ${{ secrets.DINGTALK_SECRET }}
-        run: |
-          python -c '
-          import os, time, hmac, hashlib, base64, urllib.parse, requests, glob
-
-          secret = os.environ.get("DINGTALK_SECRET")
-          webhook = os.environ.get("DINGTALK_WEBHOOK")
-          
-          timestamp = str(round(time.time() * 1000))
-          secret_enc = secret.encode("utf-8")
-          string_to_sign = f"{timestamp}\n{secret}"
-          string_to_sign_enc = string_to_sign.encode("utf-8")
-          hmac_code = hmac.new(secret_enc, string_to_sign_enc, digestmod=hashlib.sha256).digest()
-          sign = urllib.parse.quote_plus(base64.b64encode(hmac_code))
-          
-          target_url = f"{webhook}&timestamp={timestamp}&sign={sign}"
-          
-          # 寻找生成的最新摘要文件
-          files = sorted(glob.glob("data/summaries/horizon-*.md"))
-          if files:
-              with open(files[-1], "r", encoding="utf-8") as f:
-                  content = f.read()
-              
-              payload = {
-                  "msgtype": "markdown",
-                  "markdown": {
-                      "title": "🌅 今日 AI 新闻雷达",
-                      "text": content[:4000] # 钉钉文本截断安全长度
-                  }
-              }
-              res = requests.post(target_url, json=payload)
-              print("DingTalk Response:", res.text)
-          else:
-              print("No summary markdown file found.")
-          '
+{
+  "ai": {
+    "provider": "openai",
+    "model": "deepseek-chat",
+    "base_url": "https://api.deepseek.com/v1",
+    "api_key_env": "DEEPSEEK_API_KEY"
+  },
+  "sources": {
+    "rss": [
+      {
+        "name": "Hugging Face Blog",
+        "url": "https://huggingface.co/blog/feed.xml",
+        "profile": "tech-news"
+      },
+      {
+        "name": "OpenAI Blog",
+        "url": "https://openai.com/news/rss.xml",
+        "profile": "tech-news"
+      },
+      {
+        "name": "LangChain Blog",
+        "url": "https://blog.langchain.dev/rss/",
+        "profile": "tech-news"
+      },
+      {
+        "name": "LlamaIndex Blog",
+        "url": "https://www.llamaindex.ai/blog/rss.xml",
+        "profile": "tech-news"
+      },
+      {
+        "name": "NVIDIA Technical Blog",
+        "url": "https://developer.nvidia.com/blog/feed/",
+        "profile": "tech-news"
+      },
+      {
+        "name": "Simon Willison Weblog",
+        "url": "https://simonwillison.net/atom/everything/",
+        "profile": "tech-news"
+      }
+    ],
+    "hacker_news": [
+      {
+        "name": "Hacker News Top AI",
+        "min_score": 50,
+        "profile": "tech-news"
+      }
+    ],
+    "reddit": {
+      "subreddits": [
+        {
+          "subreddit": "LocalLLaMA",
+          "min_score": 30,
+          "profile": "tech-news"
+        },
+        {
+          "subreddit": "MachineLearning",
+          "min_score": 50,
+          "profile": "tech-news"
+        }
+      ]
+    }
+  },
+  "processing": {
+    "profiles_dir": "profiles",
+    "default_profile": "tech-news",
+    "profile_settings": {
+      "tech-news": {
+        "threshold": 6.0,
+        "topic_dedup": true
+      }
+    }
+  },
+  "digest": {
+    "max_items": 15
+  },
+  "email": {
+    "enabled": true,
+    "smtp_server": "smtp.163.com",
+    "smtp_port": 465,
+    "imap_server": "imap.163.com",
+    "use_tls": false,
+    "use_ssl": true,
+    "email_address": "13820386280@163.com",
+    "sender": "13820386280@163.com",
+    "password_env": "SMTP_PASSWORD",
+    "recipients": [
+      "13820386280@163.com"
+    ]
+  },
+  "webhook": {
+    "enabled": false
+  }
+}
